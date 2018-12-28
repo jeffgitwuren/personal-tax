@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+工资:<input type="text" id="sallery-input" />
+专项扣除:<input type="text" id="diff-input" />
+
+
+<input type="button" value="计算" onclick="gogogo()">
+
+
+<div>
+    五险一金:<span id="five-risk-one-gold"></span>
+    <br>
+    每月缴税
+    <ul id="tax-list">
+
+    </ul>
+</div>
+
+<script>
+
+
+    function getPercent(remain) {
+        if(remain<=36000) {
+            return [0,0.03];
+        } else if(remain>36000 && remain<=144000) {
+            return [2520,0.1];
+        } else if(remain>144000 && remain<=300000) {
+            return [16920,0.2];
+        } else if(remain>300000 && remain<=420000) {
+            return [31920,0.25];
+        } else if(remain>420000 && remain<=660000) {
+            return [31920,0.3];
+        } else if(remain>660000 && remain<=960000) {
+            return [85920,0.35];
+        } else if(remain>960000) {
+            return [181920,0.45];
+        }
+    }
+
+
+
+    function sumArray(array) {
+        var total = 0;
+        array.forEach(function(tax){
+            total += tax;
+        });
+        return total;
+    }
+
+
+
+
+
+
+
+    function gogogo() {
+
+
+        var sallery = parseInt(document.getElementById('sallery-input').value);
+        var base = 5000;
+        var diff = parseInt(document.getElementById('diff-input').value);
+
+
+
+        var fiveRiskBase = [4279, 21396];
+        var oneGold = [2300, 21400.00];
+
+
+        var fiverRiskForTax = sallery;
+
+        if (sallery < fiveRiskBase[0]) {
+            fiverRiskForTax = fiveRiskBase[0];
+        } else if (sallery > fiveRiskBase[1]) {
+            fiverRiskForTax = fiveRiskBase[1]
+        }
+
+
+        var fiveRiskTaxList = [fiverRiskForTax * 0.08, fiverRiskForTax * 0.02, fiverRiskForTax * 0.005, fiverRiskForTax * 0.002, fiverRiskForTax * 0.01];
+        var fiveRiskTax = sumArray(fiveRiskTaxList);
+
+
+        var oneGoldForTax = sallery;
+
+        if (sallery < oneGold[0]) {
+            oneGoldForTax = oneGold[0];
+        } else if (sallery > oneGold[1]) {
+            oneGoldForTax = oneGold[1]
+        }
+
+        var oneGoldTax = oneGoldForTax * 0.07;
+
+
+        var fiveRiskOneGold = fiveRiskTax + oneGoldTax;
+
+        console.log('五险:', fiveRiskTaxList);
+        console.log('一金:', oneGoldTax);
+
+        var fivOneString = '五险' + fiveRiskTaxList.join(',') + '公积金:' + oneGoldTax
+
+        document.getElementById("five-risk-one-gold").innerHTML = fivOneString;
+
+        var tax = [];
+
+
+        var taxListString = '';
+        for (var i = 1; i <= 12; i++) {
+            var currentMonthRemain = (sallery - (fiveRiskOneGold + diff + base)) * i;
+            console.log(i, currentMonthRemain);
+            var taxPercentInfo = getPercent(currentMonthRemain);
+            tax[i] = currentMonthRemain * taxPercentInfo[1] - taxPercentInfo[0] - sumArray(tax);
+
+            taxListString += '<li>' + i + '月:' + tax[i] + '</li>';
+        }
+        console.log(tax);
+
+
+        document.getElementById("tax-list").innerHTML = taxListString;
+    }
+
+</script>
+
+
+
+</body>
+
+</html>
