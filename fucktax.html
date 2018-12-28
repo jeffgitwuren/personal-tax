@@ -18,7 +18,7 @@
 </head>
 <body style="padding: 10px">
 <h4>居民个人综合所得预扣预缴税款计算器</h4>
-<form class="form-horizontal" style="width: 100%;margin-top: 20px">
+<form class="form-horizontal" style="width: 100%;margin-top: 20px;padding-bottom: 100px;">
     <div class="form-group">
         <label for="sallery-input" class="col-sm-1 control-label">工资:</label>
         <div class="col-sm-5">
@@ -53,6 +53,8 @@
     </div>
 </div>
 
+<div style="height: 50px;"></div>
+
 <script>
 
 
@@ -66,7 +68,7 @@
         } else if (remain > 300000 && remain <= 420000) {
             return [31920, 0.25];
         } else if (remain > 420000 && remain <= 660000) {
-            return [31920, 0.3];
+            return [52920, 0.3];
         } else if (remain > 660000 && remain <= 960000) {
             return [85920, 0.35];
         } else if (remain > 960000) {
@@ -140,7 +142,7 @@
             var taxPercentInfo = getPercent(currentMonthRemain);
             tax[i] = currentMonthRemain * taxPercentInfo[1] - taxPercentInfo[0] - sumArray(tax);
 
-            taxListString += '<li class="list-group-item">' + i + '月:' + tax[i].toFixed(2) + '</li>';
+            taxListString += '<li class="list-group-item">' + i + '月:' + Math.max(tax[i],0).toFixed(2) + '</li>';
         }
         console.log(tax);
 
@@ -149,6 +151,8 @@
     }
 
 </script>
+
+
 
 
 </body>
